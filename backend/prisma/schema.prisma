@@ -1,0 +1,143 @@
+// Prisma schema for Military Asset Management System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id                Int           @id @default(autoincrement())
+  email            String        @unique
+  name             String
+  password         String
+  roleId           Int
+  role             Role          @relation(fields: [roleId], references: [id])
+  baseId           Int?
+  base             Base?         @relation(fields: [baseId], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  assignedAssets   Assignment[]  @relation("AssignedBy")
+  expendedAssets   Expenditure[] @relation("ExpendedBy")
+  assignments      Assignment[]  @relation("Personnel")
+  expenditures     Expenditure[] @relation("Personnel")
+  createdPurchases Purchase[]
+  createdTransfers Transfer[]
+  apiLogs          ApiLog[]
+}
+
+model Base {
+  id              Int           @id @default(autoincrement())
+  name            String        @unique
+  location        String
+  users           User[]
+  assets          Asset[]
+  purchases       Purchase[]
+  transfersFrom   Transfer[]    @relation("FromBase")
+  transfersTo     Transfer[]    @relation("ToBase")
+  assignments     Assignment[]
+  expenditures    Expenditure[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Asset {
+  id           Int           @id @default(autoincrement())
+  type         String
+  serial       String        @unique
+  description  String?
+  baseId       Int
+  base         Base          @relation(fields: [baseId], references: [id])
+  purchases    Purchase[]
+  transfers    Transfer[]
+  assignments  Assignment[]
+  expenditures Expenditure[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Purchase {
+  id          Int      @id @default(autoincrement())
+  assetId     Int
+  asset       Asset    @relation(fields: [assetId], references: [id])
+  baseId      Int
+  base        Base     @relation(fields: [baseId], references: [id])
+  quantity    Int
+  date        DateTime @default(now())
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Transfer {
+  id          Int      @id @default(autoincrement())
+  assetId     Int
+  asset       Asset    @relation(fields: [assetId], references: [id])
+  fromBaseId  Int
+  fromBase    Base     @relation("FromBase", fields: [fromBaseId], references: [id])
+  toBaseId    Int
+  toBase      Base     @relation("ToBase", fields: [toBaseId], references: [id])
+  quantity    Int
+  date        DateTime @default(now())
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Assignment {
+  id           Int      @id @default(autoincrement())
+  assetId      Int
+  asset        Asset    @relation(fields: [assetId], references: [id])
+  baseId       Int
+  base         Base     @relation(fields: [baseId], references: [id])
+  personnelId  Int
+  personnel    User     @relation("Personnel", fields: [personnelId], references: [id])
+  quantity     Int
+  date         DateTime @default(now())
+  assignedById Int
+  assignedBy   User     @relation("AssignedBy", fields: [assignedById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Expenditure {
+  id           Int      @id @default(autoincrement())
+  assetId      Int
+  asset        Asset    @relation(fields: [assetId], references: [id])
+  baseId       Int
+  base         Base     @relation(fields: [baseId], references: [id])
+  personnelId  Int
+  personnel    User     @relation("Personnel", fields: [personnelId], references: [id])
+  quantity     Int
+  date         DateTime @default(now())
+  expendedById Int
+  expendedBy   User     @relation("ExpendedBy", fields: [expendedById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ApiLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  Int?
+  timestamp DateTime @default(now())
+  details   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
