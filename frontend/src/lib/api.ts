@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { LoginCredentials, AuthResponse } from '@/types/auth';
 
+// Force deployment update - using Railway backend URL
 const api = axios.create({
   baseURL: 'https://backend-production-0dc3.up.railway.app',
   headers: {
@@ -19,6 +20,7 @@ api.interceptors.request.use((config) => {
 
 export const auth = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+    console.log('Attempting login with Railway backend...');
     const response = await api.post('/api/auth/login', credentials);
     return response.data;
   },
