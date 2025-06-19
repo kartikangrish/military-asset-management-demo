@@ -17,7 +17,26 @@ This system handles asset tracking, purchases, transfers, assignments, and expen
 ---
 
 ### **SYSTEM ARCHITECTURE (0:30 - 1:30)**
-*[Show architecture diagram/code structure]*
+*[Show SYSTEM_ARCHITECTURE.md file with the following key points]:*
+
+**"Let me walk you through our system architecture..."**
+
+1. **Three-Tier Architecture**: 
+   - Frontend (Next.js on Vercel)
+   - Backend (Express.js on Railway) 
+   - Database (PostgreSQL on Railway)
+
+2. **Technology Stack**:
+   - Frontend: Next.js 15, TailwindCSS, React Query
+   - Backend: Express.js, Prisma ORM, JWT auth
+   - Database: PostgreSQL with role-based access
+
+3. **Code Structure**:
+   - Frontend: App Router with protected routes
+   - Backend: RESTful APIs with middleware
+   - Database: Prisma schema with migrations
+
+*[Refer to the visual diagrams and detailed breakdown in SYSTEM_ARCHITECTURE.md]*
 
 **Script:**
 "The system uses a modern three-tier architecture:

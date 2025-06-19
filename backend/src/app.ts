@@ -21,7 +21,12 @@ const prisma = new PrismaClient();
 
 // CORS configuration for production
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || ['http://localhost:3000', 'https://*.vercel.app', 'https://*.netlify.app'],
+  origin: [
+    'http://localhost:3000',
+    'https://frontend-dzrjus2wz-kartiks-projects-3f634b70.vercel.app',
+    'https://*.vercel.app',
+    'https://*.netlify.app'
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -29,6 +34,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Military Asset Management API', status: 'ok' });
+});
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
