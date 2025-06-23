@@ -19,17 +19,42 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
-// CORS configuration for production
+// CORS configuration for production - more permissive
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'https://frontend-dzrjus2wz-kartiks-projects-3f634b70.vercel.app',
-    'https://*.vercel.app',
-    'https://*.netlify.app',
-    'https://vercel.app',
-    'https://*.vercel.app',
-    /^https:\/\/.*\.vercel\.app$/
-  ],
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://frontend-dzrjus2wz-kartiks-projects-3f634b70.vercel.app',
+      'https://frontend-9uk2daccl-kartiks-projects-3f634b70.vercel.app',
+      'https://*.vercel.app',
+      'https://*.netlify.app',
+      'https://vercel.app',
+      'https://*.vercel.app',
+      /^https:\/\/.*\.vercel\.app$/,
+      /^https:\/\/.*\.railway\.app$/
+    ];
+    
+    // Check if origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed || origin.startsWith(allowed.replace('*', ''));
+      }
+      if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Temporarily allow all origins for debugging
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
