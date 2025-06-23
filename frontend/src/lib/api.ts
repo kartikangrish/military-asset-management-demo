@@ -20,9 +20,20 @@ api.interceptors.request.use((config) => {
 
 export const auth = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    console.log('Attempting login with Railway backend...');
-    const response = await api.post('/api/auth/login', credentials);
-    return response.data;
+    console.log('Attempting login with Railway backend...', credentials.email);
+    try {
+      const response = await api.post('/api/auth/login', credentials);
+      console.log('Login response received:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Login error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers
+      });
+      throw error;
+    }
   },
   logout: () => {
     localStorage.removeItem('token');

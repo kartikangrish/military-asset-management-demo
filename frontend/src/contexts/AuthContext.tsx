@@ -39,14 +39,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (credentials: LoginCredentials) => {
     try {
+      console.log('AuthContext: Starting login process...');
       const { token: newToken, user: newUser } = await auth.login(credentials);
+      console.log('AuthContext: Login successful, setting user data...');
+      
       setToken(newToken);
       setUser(newUser);
       localStorage.setItem('token', newToken);
       localStorage.setItem('user', JSON.stringify(newUser));
+      
+      console.log('AuthContext: Redirecting to dashboard...');
       router.push('/dashboard');
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('AuthContext: Login failed:', error);
       throw error;
     }
   };
