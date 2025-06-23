@@ -72,9 +72,9 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/test-cors', (req, res) => {
-  console.log('CORS test endpoint hit');
+  console.log('CORS test endpoint hit - FORCE DEPLOY');
   res.json({ 
-    message: 'CORS test successful',
+    message: 'CORS test successful - FORCE DEPLOY',
     timestamp: new Date().toISOString(),
     origin: req.headers.origin
   });
