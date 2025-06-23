@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { LoginCredentials, AuthResponse } from '@/types/auth';
 
-// Force deployment update - using Railway backend URL
+// Use Railway backend for local testing
 const api = axios.create({
   baseURL: 'https://backend-production-0dc3.up.railway.app',
   headers: {
