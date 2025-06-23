@@ -25,7 +25,10 @@ const corsOptions = {
     'http://localhost:3000',
     'https://frontend-dzrjus2wz-kartiks-projects-3f634b70.vercel.app',
     'https://*.vercel.app',
-    'https://*.netlify.app'
+    'https://*.netlify.app',
+    'https://vercel.app',
+    'https://*.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/
   ],
   credentials: true,
   optionsSuccessStatus: 200
@@ -41,6 +44,15 @@ app.get('/', (req, res) => {
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+app.get('/test-cors', (req, res) => {
+  console.log('CORS test endpoint hit');
+  res.json({ 
+    message: 'CORS test successful',
+    timestamp: new Date().toISOString(),
+    origin: req.headers.origin
+  });
 });
 
 app.use('/api/auth', authRouter);
