@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
+// API base URL - should match the one in api.ts
+const API_BASE_URL = 'https://backend-production-0dc3.up.railway.app';
+
 interface DashboardMetrics {
   openingBalance: number;
   closingBalance: number;
@@ -54,7 +57,7 @@ export default function DashboardPage() {
       try {
         // Fetch dashboard metrics
         const metricsResponse = await fetch(
-          `http://localhost:4000/api/dashboard/metrics?${new URLSearchParams({
+          `${API_BASE_URL}/api/dashboard/metrics?${new URLSearchParams({
             ...filters,
             baseId: filters.baseId || (user?.baseId?.toString() || ''),
           })}`,
@@ -66,14 +69,14 @@ export default function DashboardPage() {
         );
 
         // Fetch assets for filter
-        const assetsResponse = await fetch('http://localhost:4000/api/assets', {
+        const assetsResponse = await fetch(`${API_BASE_URL}/api/assets`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
         // Fetch bases for filter (if admin or logistics officer)
-        const basesResponse = await fetch('http://localhost:4000/api/bases', {
+        const basesResponse = await fetch(`${API_BASE_URL}/api/bases`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
